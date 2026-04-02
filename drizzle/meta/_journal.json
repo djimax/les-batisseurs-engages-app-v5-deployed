@@ -1,5 +1,41 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1774170864378,
+      "tag": "0000_nifty_robin_chapel",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1774758294660,
+      "tag": "0001_curved_randall",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774764723764,
+      "tag": "0002_good_bucky",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1775038664764,
+      "tag": "0003_tidy_runaways",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1775059497228,
+      "tag": "0004_white_gamma_corps",
+      "breakpoints": true
+    }
+  ]
 }
