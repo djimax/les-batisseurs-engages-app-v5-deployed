@@ -171,3 +171,14 @@
 - [ ] Ajouter l'export PDF avec mise en forme professionnelle
 - [ ] Ajouter l'export Excel avec données détaillées
 - [x] Tester et valider le système de rapports
+
+
+## Phase 17 - Recherche Globale (NOUVELLE)
+- [x] Créer le router tRPC pour la recherche globale
+- [x] Implémenter la recherche en temps réel pour membres et documents
+- [x] Créer le composant SearchBar avec autocomplétion
+- [x] Ajouter la barre de recherche au header
+- [x] Implémenter le debounce pour optimiser les requêtes
+- [ ] Créer la page de résultats de recherche
+- [x] Ajouter les raccourcis clavier (Cmd+K / Ctrl+K)
+- [x] Tester la recherche avec différents termes

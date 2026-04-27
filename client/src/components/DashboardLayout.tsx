@@ -58,6 +58,7 @@ import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 import { Button } from "./ui/button";
 import { UserMenu } from "./UserMenu";
+import SearchBar from "./SearchBar";
 
 interface MenuItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -453,6 +454,7 @@ function DashboardLayoutContent({
                 {activeItem?.label || "Tableau de bord"}
               </h1>
             </div>
+            {!isMobile && <SearchBar />}
             {user && (
               <UserMenu
                 userName={user.name || "Utilisateur"}
