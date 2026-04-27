@@ -182,3 +182,11 @@
 - [ ] Créer la page de résultats de recherche
 - [x] Ajouter les raccourcis clavier (Cmd+K / Ctrl+K)
 - [x] Tester la recherche avec différents termes
+
+## Phase 18 - Aperçu Riche dans la Recherche (NOUVELLE)
+- [x] Enrichir le router tRPC search.global avec métadonnées complètes des documents
+- [x] Ajouter statut, priorité, catégorie, date dans les résultats
+- [x] Implémenter la mise en évidence du terme recherché dans les résultats
+- [x] Améliorer le composant SearchBar avec un aperçu riche
+- [x] Ajouter les badges de statut et priorité dans les résultats
+- [x] Tester l'affichage des aperçus enrichis
