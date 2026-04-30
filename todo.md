@@ -127,12 +127,12 @@
 
 
 ## Phase 12 - Système de Rapports & Exports (PRIORITAIRE)
-- [ ] Créer les routers tRPC pour générer les rapports
-- [ ] Implémenter l'export PDF (factures, budgets, rapports financiers)
-- [ ] Implémenter l'export Excel avec tableaux croisés
-- [ ] Créer la page "Rapports & Exports"
-- [ ] Ajouter les graphiques statistiques (Recharts)
-- [ ] Implémenter les rapports mensuels/annuels
+- [x] Créer les routers tRPC pour générer les rapports
+- [x] Implémenter l'export PDF (factures, budgets, rapports financiers)
+- [x] Implémenter l'export Excel avec tableaux croisés
+- [x] Créer la page "Rapports & Exports"
+- [x] Ajouter les graphiques statistiques (Recharts)
+- [x] Implémenter les rapports mensuels/annuels
 
 ## Phase 13 - Gestion des Adhésions & Cotisations (PRIORITAIRE)
 - [ ] Créer les tables pour adhésions et cotisations
@@ -202,3 +202,10 @@
 - [x] Implémenter les statistiques et graphiques de progression
 - [x] Ajouter les actions rapides (créer, éditer, archiver, supprimer)
 - [x] Tester toutes les vues et fonctionnalités
+
+
+## Phase 12 - Améliorations supplémentaires
+- [ ] Ajouter l'export PDF des factures et des budgets
+- [ ] Implémenter les tableaux croisés pour l'export Excel (agrégations par période et catégorie)
+- [ ] Ajouter les rapports annuels (backend + UI)
+- [ ] Appliquer correctement les filtres de dates dans les rapports

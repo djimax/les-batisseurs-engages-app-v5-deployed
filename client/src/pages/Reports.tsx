@@ -9,6 +9,7 @@ import { toast } from "sonner";
 export default function Reports() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [isExporting, setIsExporting] = useState(false);
 
   // Récupérer les données
   const { data: financialStats, isLoading: statsLoading } = trpc.reports.getFinancialStats.useQuery({ startDate: undefined, endDate: undefined });
@@ -20,17 +21,61 @@ export default function Reports() {
   const { data: expensesChart, isLoading: expensesLoading } = trpc.reports.getExpensesChart.useQuery(undefined, { enabled: true });
   const { data: cotisationsChart, isLoading: cotisationsLoading } = trpc.reports.getCotisationsChart.useQuery(undefined, { enabled: true });
 
+  // Mutations pour les exports
+  const exportFinancialPDF = trpc.exports.exportFinancialReportPDF.useMutation();
+  const exportFinancialExcel = trpc.exports.exportFinancialReportExcel.useMutation();
+
   // Couleurs pour les graphiques
   const COLORS = ["#1a4d2e", "#2d7a4a", "#4a9d6f", "#6fb89f", "#a8d5ba"];
 
-  const handleExportPDF = () => {
-    toast.success("Export PDF en cours de préparation...");
-    // TODO: Implémenter l'export PDF
+  const downloadFile = (data: string, filename: string, contentType: string) => {
+    const blob = new Blob([Buffer.from(data, "base64")], { type: contentType });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
-  const handleExportExcel = () => {
-    toast.success("Export Excel en cours de préparation...");
-    // TODO: Implémenter l'export Excel
+  const handleExportPDF = async () => {
+    try {
+      setIsExporting(true);
+      const result = await exportFinancialPDF.mutateAsync({
+        month: selectedMonth,
+        year: selectedYear,
+      });
+      if (result.success) {
+        downloadFile(result.data, result.filename, result.contentType);
+        toast.success("Rapport PDF téléchargé avec succès");
+      }
+    } catch (error) {
+      toast.error("Erreur lors de l'export PDF");
+      console.error(error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportExcel = async () => {
+    try {
+      setIsExporting(true);
+      const result = await exportFinancialExcel.mutateAsync({
+        month: selectedMonth,
+        year: selectedYear,
+      });
+      if (result.success) {
+        downloadFile(result.data, result.filename, result.contentType);
+        toast.success("Rapport Excel téléchargé avec succès");
+      }
+    } catch (error) {
+      toast.error("Erreur lors de l'export Excel");
+      console.error(error);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const isLoading = statsLoading || reportLoading || membersLoading || expensesLoading || cotisationsLoading;
@@ -44,12 +89,12 @@ export default function Reports() {
           <p className="text-muted-foreground mt-2">Générez et exportez vos rapports financiers et statistiques</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handleExportPDF} variant="outline" size="sm">
-            <FileText className="w-4 h-4 mr-2" />
+          <Button onClick={handleExportPDF} variant="outline" size="sm" disabled={isExporting}>
+            {isExporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
             Export PDF
           </Button>
-          <Button onClick={handleExportExcel} variant="outline" size="sm">
-            <Sheet className="w-4 h-4 mr-2" />
+          <Button onClick={handleExportExcel} variant="outline" size="sm" disabled={isExporting}>
+            {isExporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sheet className="w-4 h-4 mr-2" />}
             Export Excel
           </Button>
         </div>
