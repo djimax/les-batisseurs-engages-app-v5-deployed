@@ -36,6 +36,13 @@
       "when": 1775059497228,
       "tag": "0004_white_gamma_corps",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1777463049123,
+      "tag": "0005_curvy_vision",
+      "breakpoints": true
     }
   ]
 }

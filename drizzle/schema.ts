@@ -826,3 +826,73 @@ export const widgetTemplates = mysqlTable("widget_templates", {
 
 export type WidgetTemplate = typeof widgetTemplates.$inferSelect;
 export type InsertWidgetTemplate = typeof widgetTemplates.$inferInsert;
+
+
+/**
+ * Projects table - project management with budget tracking
+ */
+export const projects = mysqlTable("projects", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["active", "pending", "completed", "archived"]).default("active").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium").notNull(),
+  
+  // Budget tracking
+  budget: decimal("budget", { precision: 12, scale: 2 }),
+  spent: decimal("spent", { precision: 12, scale: 2 }).default("0"),
+  
+  // Dates
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  
+  // Team and responsibility
+  leaderId: int("leaderId"),
+  
+  // Progress tracking
+  progress: int("progress").default(0),
+  
+  // Metadata
+  createdBy: int("createdBy"),
+  updatedBy: int("updatedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  isArchived: boolean("isArchived").default(false),
+});
+
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = typeof projects.$inferInsert;
+
+/**
+ * Project tasks table
+ */
+export const projectTasks = mysqlTable("project_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["pending", "in-progress", "completed"]).default("pending").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high"]).default("medium").notNull(),
+  assignedTo: int("assignedTo"),
+  dueDate: timestamp("dueDate"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectTask = typeof projectTasks.$inferSelect;
+export type InsertProjectTask = typeof projectTasks.$inferInsert;
+
+/**
+ * Project members table - assign members to projects
+ */
+export const projectMembers = mysqlTable("project_members", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  memberId: int("memberId").notNull(),
+  role: varchar("role", { length: 100 }),
+  joinedAt: timestamp("joinedAt").defaultNow().notNull(),
+});
+
+export type ProjectMember = typeof projectMembers.$inferSelect;
+export type InsertProjectMember = typeof projectMembers.$inferInsert;

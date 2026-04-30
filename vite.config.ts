@@ -164,8 +164,9 @@ export default defineConfig({
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
       "react": path.resolve(import.meta.dirname, "node_modules/react"),
       "react-dom": path.resolve(import.meta.dirname, "node_modules/react-dom"),
+      "wouter": path.resolve(import.meta.dirname, "node_modules/wouter"),
     },
-    dedupe: ["react", "react-dom"],
+    dedupe: ["react", "react-dom", "wouter"],
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
