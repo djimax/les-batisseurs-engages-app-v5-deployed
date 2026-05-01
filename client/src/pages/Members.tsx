@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ExportPDF } from "@/components/ExportPDF";
 import { HeroSection } from "@/components/HeroSection";
 import { Pagination } from "@/components/Pagination";
+import { MemberFormDialog } from "@/components/MemberFormDialog";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -231,11 +232,14 @@ export default function Members() {
         subtitle="Organisez et gérez tous les membres de votre association"
         icon="👥"
         variant="accent"
-        action={{
-          label: "Ajouter un nouveau membre",
-          onClick: () => setIsCreateDialogOpen(true),
-        }}
       />
+      
+      <div className="flex justify-end">
+        <MemberFormDialog onSuccess={() => {
+          // Refresh the members list
+          window.location.reload();
+        }} />
+      </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
