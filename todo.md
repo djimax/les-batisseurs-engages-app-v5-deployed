@@ -135,9 +135,9 @@
 - [x] Implémenter les rapports mensuels/annuels
 
 ## Phase 13 - Gestion des Adhésions & Cotisations (PRIORITAIRE)
-- [ ] Créer les tables pour adhésions et cotisations
-- [ ] Implémenter les routers tRPC pour adhésions
-- [ ] Créer la page "Adhésions & Cotisations"
+- [x] Créer les tables pour adhésions et cotisations
+- [x] Implémenter les routers tRPC pour adhésions
+- [x] Créer la page "Adhésions & Cotisations"
 - [ ] Ajouter le suivi automatique des cotisations
 - [ ] Implémenter les rappels de paiement
 - [ ] Générer les factures/quittances automatiquement
