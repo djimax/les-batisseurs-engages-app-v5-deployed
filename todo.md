@@ -29,9 +29,9 @@
 
 ## Phase 5 - Pages Principales
 - [x] Refonte de Home.tsx (dashboard avec stats dynamiques)
-- [ ] Refonte de Documents.tsx (filtres, pagination, loading states)
-- [ ] Refonte de Members.tsx (recherche debounce, optimistic updates)
-- [ ] Refonte de Finance.tsx (connecter au backend, graphiques)
+- [x] Refonte de Documents.tsx (filtres, pagination, loading states)
+- [x] Refonte de Members.tsx (recherche debounce, optimistic updates)
+- [x] Refonte de Finance.tsx (connecter au backend, graphiques)
 
 ## Phase 6 - Pages Secondaires
 - [ ] Refonte Events.tsx
@@ -209,3 +209,9 @@
 - [ ] Implémenter les tableaux croisés pour l'export Excel (agrégations par période et catégorie)
 - [ ] Ajouter les rapports annuels (backend + UI)
 - [ ] Appliquer correctement les filtres de dates dans les rapports
+
+
+## Phase 5 - Améliorations Complémentaires
+- [ ] Vérifier et compléter Documents.tsx pour que les filtres, la pagination et les états loading/error/empty soient effectivement rendus
+- [ ] Ajouter dans Members.tsx une vraie recherche avec debounce et des mutations avec optimistic updates
+- [ ] Connecter réellement Finance.tsx au backend via tRPC et valider les graphiques sur données réelles
