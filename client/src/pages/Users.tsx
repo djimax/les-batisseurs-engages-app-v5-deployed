@@ -319,7 +319,7 @@ export default function UsersPage() {
             <div className="text-center py-8">
               <Users className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
               <p className="text-muted-foreground">Aucun utilisateur pour le moment</p>
-              <Button className="mt-4" onClick={() => {}}>
+              <Button className="mt-4" onClick={handleCreateUser}>
                 <Plus className="h-4 w-4 mr-2" />
                 Créer le premier utilisateur
               </Button>

@@ -204,11 +204,11 @@ export default function ProjectDetail() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">{project.name}</h1>
-            <p className="text-muted-foreground">{project.description}</p>
+            <h1 className="text-3xl font-bold">{project?.name || 'Projet'}</h1>
+            <p className="text-muted-foreground">{project?.description || ''}</p>
           </div>
         </div>
-        <Badge className={getStatusColor(project.status)}>{project.status}</Badge>
+        <Badge className={getStatusColor(project?.status || 'planning')}>{project?.status || 'planning'}</Badge>
       </div>
 
       {/* Statistiques */}
@@ -219,8 +219,8 @@ export default function ProjectDetail() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Progression</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.progress}%</div>
-              <Progress value={stats.progress} className="mt-2 h-2" />
+              <div className="text-2xl font-bold">{stats?.progress || 0}%</div>
+              <Progress value={stats?.progress || 0} className="mt-2 h-2" />
             </CardContent>
           </Card>
 
@@ -229,8 +229,8 @@ export default function ProjectDetail() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Budget</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.budget.toLocaleString()} €</div>
-              <p className="text-xs text-muted-foreground mt-1">Dépensé: {stats.spent.toLocaleString()} €</p>
+              <div className="text-2xl font-bold">{(stats?.budget || 0).toLocaleString()} €</div>
+              <p className="text-xs text-muted-foreground mt-1">Dépensé: {(stats?.spent || 0).toLocaleString()} €</p>
             </CardContent>
           </Card>
 
@@ -239,7 +239,7 @@ export default function ProjectDetail() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Tâches</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.tasks.completed}/{stats.tasks.total}</div>
+              <div className="text-2xl font-bold">{stats?.tasks?.completed || 0}/{stats?.tasks?.total || 0}</div>
               <p className="text-xs text-muted-foreground mt-1">Complétées</p>
             </CardContent>
           </Card>
@@ -249,7 +249,7 @@ export default function ProjectDetail() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Membres</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.members}</div>
+              <div className="text-2xl font-bold">{stats?.members || 0}</div>
             </CardContent>
           </Card>
 
@@ -258,7 +258,7 @@ export default function ProjectDetail() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Restant</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.remaining.toLocaleString()} €</div>
+              <div className="text-2xl font-bold">{(stats?.remaining || 0).toLocaleString()} €</div>
               <p className="text-xs text-muted-foreground mt-1">Budget</p>
             </CardContent>
           </Card>
