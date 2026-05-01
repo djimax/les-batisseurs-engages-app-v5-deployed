@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Plus, Edit2, Trash2, Archive, Filter, Download, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import { ProjectFormDialog } from "@/components/ProjectFormDialog";
 
 type Project = any;
 type SortField = "name" | "startDate" | "endDate" | "budget" | "progress" | "status";
@@ -137,10 +138,10 @@ export default function ProjectsComplete() {
           <h1 className="text-3xl font-bold">Projets</h1>
           <p className="text-gray-600 mt-1">Gestion complète des projets de l'association</p>
         </div>
-        <Button className="gap-2">
-          <Plus size={20} />
-          Nouveau Projet
-        </Button>
+        <ProjectFormDialog onSuccess={() => {
+          // Refresh the projects list
+          window.location.reload();
+        }} />
       </div>
 
       {/* Statistiques */}

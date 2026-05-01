@@ -235,3 +235,22 @@
 - ✅ Compilation TypeScript sans erreurs
 - ✅ Serveur de développement en cours d'exécution
 - ✅ Tous les boutons testés et fonctionnels
+
+
+## Modales de Formulaires - PRIORITAIRE
+
+### Modales à Créer
+- [ ] Modale de création/édition de projet
+- [ ] Modale de création/édition d'adhésion
+- [ ] Modale de création/édition de document
+- [ ] Modale de création/édition de membre
+- [ ] Modale de création/édition de cotisation
+- [ ] Modale de création/édition de budget
+
+### Boutons à Connecter
+- [ ] Bouton "Créer un nouveau projet" → Modale de projet
+- [ ] Bouton "Créer un nouveau document" → Modale de document
+- [ ] Bouton "Ajouter un nouveau membre" → Modale de membre
+- [ ] Bouton "Nouvelle Adhésion" → Modale d'adhésion
+- [ ] Bouton "Ajouter une cotisation" → Modale de cotisation
+- [ ] Bouton "Ajouter un budget" → Modale de budget
