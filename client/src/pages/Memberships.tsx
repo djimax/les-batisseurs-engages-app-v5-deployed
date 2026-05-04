@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Plus, Users } from "lucide-react";
 import { toast } from "sonner";
+import { AdhesionFormDialog } from "@/components/AdhesionFormDialog";
 
 export default function Memberships() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -88,10 +89,10 @@ export default function Memberships() {
           <h1 className="text-3xl font-bold">Adhésions & Cotisations</h1>
           <p className="text-muted-foreground mt-2">Gérez les adhésions et cotisations des membres</p>
         </div>
-        <Button className="bg-primary gap-2">
-          <Plus className="w-4 h-4" />
-          Nouvelle adhésion
-        </Button>
+        <AdhesionFormDialog onSuccess={() => {
+          // Refresh the page to see the new adhesion
+          window.location.reload();
+        }} />
       </div>
 
       {/* Statistiques globales */}

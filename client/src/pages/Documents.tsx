@@ -2,6 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import { ExportPDF } from "@/components/ExportPDF";
 import { HeroSection } from "@/components/HeroSection";
 import { Pagination } from "@/components/Pagination";
+import { DocumentFormDialog } from "@/components/DocumentFormDialog";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -352,11 +353,14 @@ export default function Documents() {
         title="Gestion des Documents"
         subtitle="Organisez, partagez et gérez tous les documents importants de votre association en un seul endroit"
         icon="📄"
-        action={{
-          label: "Créer un nouveau document",
-          onClick: () => setIsCreateDialogOpen(true),
-        }}
       />
+      
+      <div className="flex justify-end">
+        <DocumentFormDialog onSuccess={() => {
+          // Refresh the documents list
+          window.location.reload();
+        }} />
+      </div>
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -374,10 +378,7 @@ export default function Documents() {
               type="documents" 
             />
           )}
-          <Button onClick={() => setIsCreateDialogOpen(true)} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Nouveau document
-          </Button>
+          {/* DocumentFormDialog added above */}
         </div>
       </div>
 
