@@ -33,7 +33,7 @@
 - [x] Refonte de Members.tsx (recherche debounce, optimistic updates)
 - [x] Refonte de Finance.tsx (connecter au backend, graphiques)
 
-## Phase 6 - Pages Secondaires
+## Phase 6 - Pages Secondaires (EN ATTENTE - Non prioritaire pour MVP)
 - [ ] Refonte Events.tsx
 - [ ] Refonte Campaigns.tsx
 - [ ] Refonte Adhesions.tsx
@@ -138,10 +138,10 @@
 - [x] Créer les tables pour adhésions et cotisations
 - [x] Implémenter les routers tRPC pour adhésions
 - [x] Créer la page "Adhésions & Cotisations"
-- [ ] Ajouter le suivi automatique des cotisations
-- [ ] Implémenter les rappels de paiement
-- [ ] Générer les factures/quittances automatiquement
-- [ ] Ajouter l'historique des paiements
+- [ ] Ajouter le suivi automatique des cotisations (calcul d'échéances, mise à jour auto)
+- [ ] Implémenter les rappels de paiement (notifications/emails réels)
+- [ ] Générer les factures/quittances automatiquement (modèle + backend)
+- [ ] Ajouter l'historique des paiements (table + UI dédiée)
 
 ## Phase 14 - Tableau de Bord Personnalisable (PRIORITAIRE)
 - [x] Créer les widgets personnalisables
