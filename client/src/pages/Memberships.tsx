@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Plus, Users } from "lucide-react";
 import { toast } from "sonner";
 import { AdhesionFormDialog } from "@/components/AdhesionFormDialog";
+import { CotisationFormDialog } from "@/components/CotisationFormDialog";
 
 export default function Memberships() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -206,6 +207,12 @@ export default function Memberships() {
 
         {/* Onglet Cotisations */}
         <TabsContent value="cotisations" className="space-y-4">
+          <div className="flex justify-end mb-4">
+            <CotisationFormDialog onSuccess={() => {
+              // Refresh the page to see the new cotisation
+              window.location.reload();
+            }} />
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>Cotisations</CardTitle>
