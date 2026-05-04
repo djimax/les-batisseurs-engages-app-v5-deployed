@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertCircle, Plus, TrendingUp } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { BudgetFormDialog } from "@/components/BudgetFormDialog";
 
 export default function Budgets() {
   const [year, setYear] = useState(new Date().getFullYear());
@@ -37,10 +38,10 @@ export default function Budgets() {
           <h1 className="text-3xl font-bold">Budgets</h1>
           <p className="text-muted-foreground">Gestion des budgets annuels</p>
         </div>
-        <Button onClick={() => setIsCreating(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Nouveau Budget
-        </Button>
+        <BudgetFormDialog onSuccess={() => {
+          // Refresh the budgets list
+          window.location.reload();
+        }} />
       </div>
 
       {/* Filtres */}

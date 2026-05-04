@@ -157,7 +157,7 @@ export default function Events() {
             Gérez les événements passés, présents et futurs de l'association
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => toast.info("Création d'événement - Fonctionnalité en développement")}>
           <Plus className="h-4 w-4" />
           Nouvel événement
         </Button>

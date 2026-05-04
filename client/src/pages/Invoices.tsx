@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Plus, FileText } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InvoiceFormDialog } from "@/components/InvoiceFormDialog";
 
 export default function Invoices() {
   const [status, setStatus] = useState<string | undefined>();
@@ -53,10 +54,10 @@ export default function Invoices() {
           <h1 className="text-3xl font-bold">Factures</h1>
           <p className="text-muted-foreground">Gestion des factures fournisseurs</p>
         </div>
-        <Button onClick={() => setIsCreating(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Nouvelle Facture
-        </Button>
+        <InvoiceFormDialog onSuccess={() => {
+          // Refresh the invoices list
+          window.location.reload();
+        }} />
       </div>
 
       {/* Statistiques */}
