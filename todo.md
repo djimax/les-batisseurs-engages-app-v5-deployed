@@ -240,12 +240,12 @@
 ## Modales de Formulaires - PRIORITAIRE
 
 ### Modales à Créer
-- [ ] Modale de création/édition de projet
-- [ ] Modale de création/édition d'adhésion
-- [ ] Modale de création/édition de document
-- [ ] Modale de création/édition de membre
-- [ ] Modale de création/édition de cotisation
-- [ ] Modale de création/édition de budget
+- [x] Modale de création/édition de projet
+- [x] Modale de création/édition d'adhésion
+- [x] Modale de création/édition de document
+- [x] Modale de création/édition de membre
+- [x] Modale de création/édition de cotisation
+- [x] Modale de création/édition de budget
 
 ### Boutons à Connecter
 - [ ] Bouton "Créer un nouveau projet" → Modale de projet
