@@ -248,9 +248,9 @@
 - [x] Modale de création/édition de budget
 
 ### Boutons à Connecter
-- [ ] Bouton "Créer un nouveau projet" → Modale de projet
-- [ ] Bouton "Créer un nouveau document" → Modale de document
-- [ ] Bouton "Ajouter un nouveau membre" → Modale de membre
-- [ ] Bouton "Nouvelle Adhésion" → Modale d'adhésion
-- [ ] Bouton "Ajouter une cotisation" → Modale de cotisation
-- [ ] Bouton "Ajouter un budget" → Modale de budget
+- [x] Bouton "Créer un nouveau projet" → Modale de projet (Projects.tsx)
+- [x] Bouton "Créer un nouveau document" → Modale de document (Documents.tsx)
+- [x] Bouton "Ajouter un nouveau membre" → Modale de membre (Members.tsx)
+- [x] Bouton "Nouvelle Adhésion" → Modale d'adhésion (Memberships.tsx)
+- [ ] Bouton "Ajouter une cotisation" → Modale de cotisation (Memberships.tsx)
+- [ ] Bouton "Ajouter un budget" → Modale de budget (Finance.tsx)
