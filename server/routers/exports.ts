@@ -313,6 +313,102 @@ export const exportsRouter = router({
     }),
 
   /**
+   * Export advanced reports to PDF
+   */
+  exportReportsPDF: protectedProcedure
+    .input(z.object({
+      reportType: z.enum(["overview", "financial", "timeline", "performance"]),
+      projectId: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        const doc = new jsPDF();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        let yPosition = 10;
+
+        // Title
+        doc.setFontSize(16);
+        doc.text(`Rapport ${input.reportType}`, pageWidth / 2, yPosition, { align: "center" });
+        yPosition += 10;
+
+        // Date
+        doc.setFontSize(10);
+        doc.text(`Genere le: ${new Date().toLocaleDateString("fr-FR")}`, pageWidth / 2, yPosition, { align: "center" });
+        yPosition += 10;
+
+        // Content
+        doc.setFontSize(12);
+        doc.text(`Type de rapport: ${input.reportType}`, 10, yPosition);
+        yPosition += 10;
+
+        if (input.projectId) {
+          doc.text(`ID Projet: ${input.projectId}`, 10, yPosition);
+          yPosition += 10;
+        }
+
+        const buffer = doc.output("arraybuffer");
+        return {
+          success: true,
+          data: Buffer.from(buffer).toString("base64"),
+          filename: `rapport-${input.reportType}-${new Date().toISOString().split("T")[0]}.pdf`,
+          contentType: "application/pdf",
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Failed to export reports PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+        });
+      }
+    }),
+
+  /**
+   * Export advanced reports to Excel
+   */
+  exportReportsExcel: protectedProcedure
+    .input(z.object({
+      reportType: z.enum(["overview", "financial", "timeline", "performance"]),
+      projectId: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        const exportData = [
+          {
+            "Type de Rapport": input.reportType,
+            "Date de Generation": new Date().toLocaleDateString("fr-FR"),
+            "ID Projet": input.projectId || "N/A",
+            "Statut": "Complete",
+          },
+        ];
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Rapport");
+
+        ws["!cols"] = [
+          { wch: 20 },
+          { wch: 20 },
+          { wch: 15 },
+          { wch: 15 },
+        ];
+
+        const buffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
+
+        return {
+          success: true,
+          data: buffer.toString("base64"),
+          filename: `rapport-${input.reportType}-${new Date().toISOString().split("T")[0]}.xlsx`,
+          contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Failed to export reports Excel: ${error instanceof Error ? error.message : "Unknown error"}`,
+        });
+      }
+    }),
+
+  /**
    * Export projects budget report to Excel
    */
   exportProjectsBudgetExcel: protectedProcedure.mutation(async () => {

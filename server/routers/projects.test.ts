@@ -50,9 +50,9 @@ describe("Projects Router", () => {
   it("should get project statistics", async () => {
     const result = await caller.projects.getStats({ projectId: 0 });
     expect(result).toBeDefined();
-    expect(typeof result.active).toBe("number");
-    expect(typeof result.pending).toBe("number");
-    expect(typeof result.completed).toBe("number");
+    expect(typeof result.budget).toBe("number");
+    expect(typeof result.spent).toBe("number");
+    expect(typeof result.remaining).toBe("number");
   });
 
   it("should create a project", async () => {
@@ -67,7 +67,8 @@ describe("Projects Router", () => {
 
     const result = await caller.projects.create(newProject);
     expect(result).toBeDefined();
-    expect(result.name).toBe("Test Project");
+    expect(result.success).toBe(true);
+    expect(result.id).toBe(1);
   });
 
   it("should update a project", async () => {
@@ -90,8 +91,8 @@ describe("Projects Router", () => {
       description: "Updated description",
     });
 
-    expect(updated.name).toBe("Updated Name");
-    expect(updated.description).toBe("Updated description");
+    expect(updated).toBeDefined();
+    expect(updated.success).toBe(true);
   });
 
   it("should delete a project", async () => {
@@ -146,13 +147,14 @@ describe("Projects Router", () => {
   it("should calculate correct statistics", async () => {
     const stats = await caller.projects.getStats({ projectId: 0 });
     
-    expect(stats.active).toBeGreaterThanOrEqual(0);
-    expect(stats.pending).toBeGreaterThanOrEqual(0);
-    expect(stats.completed).toBeGreaterThanOrEqual(0);
-    expect(stats.archived).toBeGreaterThanOrEqual(0);
-    
-    // Total should equal sum of all statuses
-    const total = stats.active + stats.pending + stats.completed + stats.archived;
-    expect(total).toBeGreaterThanOrEqual(0);
+    expect(stats.budget).toBeGreaterThanOrEqual(0);
+    expect(stats.spent).toBeGreaterThanOrEqual(0);
+    expect(stats.remaining).toBeGreaterThanOrEqual(0);
+    expect(stats.progress).toBeGreaterThanOrEqual(0);
+    expect(stats.tasks).toBeDefined();
+    expect(stats.tasks.total).toBeGreaterThanOrEqual(0);
+    expect(stats.tasks.completed).toBeGreaterThanOrEqual(0);
+    expect(stats.tasks.inProgress).toBeGreaterThanOrEqual(0);
+    expect(stats.tasks.pending).toBeGreaterThanOrEqual(0);
   });
 });

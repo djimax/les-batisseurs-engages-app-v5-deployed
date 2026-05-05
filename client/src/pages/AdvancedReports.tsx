@@ -38,14 +38,67 @@ export default function AdvancedReports() {
     { enabled: reportType === "overview" && !selectedProjectId }
   );
 
-  const handleExportPDF = () => {
-    toast.success("Export PDF en cours de préparation...");
-    // Implementation for PDF export will be added
+  const exportPDFMutation = trpc.exports.exportReportsPDF.useMutation();
+  const exportExcelMutation = trpc.exports.exportReportsExcel.useMutation();
+
+  const handleExportPDF = async () => {
+    try {
+      toast.loading("Génération du PDF...");
+      const response = await exportPDFMutation.mutateAsync({
+        reportType,
+        projectId: selectedProjectId ? parseInt(selectedProjectId) : undefined,
+      });
+      
+      // Create a blob from the base64 data and download it
+      const binaryString = atob(response.data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rapport_${reportType}_${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast.success("PDF téléchargé avec succès");
+    } catch (error) {
+      toast.error("Erreur lors de l'export PDF");
+    }
   };
 
-  const handleExportExcel = () => {
-    toast.success("Export Excel en cours de préparation...");
-    // Implementation for Excel export will be added
+  const handleExportExcel = async () => {
+    try {
+      toast.loading("Génération du fichier Excel...");
+      const response = await exportExcelMutation.mutateAsync({
+        reportType,
+        projectId: selectedProjectId ? parseInt(selectedProjectId) : undefined,
+      });
+      
+      // Create a blob from the base64 data and download it
+      const binaryString = atob(response.data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rapport_${reportType}_${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast.success("Fichier Excel téléchargé avec succès");
+    } catch (error) {
+      toast.error("Erreur lors de l'export Excel");
+    }
   };
 
   // Prepare chart data

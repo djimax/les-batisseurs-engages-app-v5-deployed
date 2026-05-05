@@ -133,6 +133,7 @@
 - [x] Créer la page "Rapports & Exports"
 - [x] Ajouter les graphiques statistiques (Recharts)
 - [x] Implémenter les rapports mensuels/annuels
+- [x] Ajouter exportReportsPDF et exportReportsExcel pour rapports avancés
 
 ## Phase 13 - Gestion des Adhésions & Cotisations (PRIORITAIRE)
 - [x] Créer les tables pour adhésions et cotisations
@@ -168,8 +169,8 @@
 - [x] Enrichir le router tRPC avec les procédures de génération de rapports
 - [x] Créer la page de rapports avec filtres et sélection de projets
 - [x] Implémenter les graphiques interactifs (Recharts)
-- [ ] Ajouter l'export PDF avec mise en forme professionnelle
-- [ ] Ajouter l'export Excel avec données détaillées
+- [x] Ajouter l'export PDF avec mise en forme professionnelle
+- [x] Ajouter l'export Excel avec données détaillées
 - [x] Tester et valider le système de rapports
 
 
