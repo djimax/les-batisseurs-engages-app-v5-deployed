@@ -56,21 +56,12 @@ export default function Campaigns() {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
-    toast.success(editingId ? "Campagne mise à jour" : "Campagne créée");
-    setFormData({
-      title: "",
-      description: "",
-      objectif: "",
-      dateDebut: "",
-      dateFin: "",
-      status: "draft",
-    });
-    setEditingId(null);
+    toast.info("Fonctionnalité en développement");
     setIsOpen(false);
   };
 
   const handleDelete = (id: number) => {
-    toast.success("Campagne supprimée");
+    toast.info("Fonctionnalité en développement");
   };
 
   const getStatusColor = (status: string) => {

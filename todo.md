@@ -32,6 +32,9 @@
 - [x] Refonte de Documents.tsx (filtres, pagination, loading states)
 - [x] Refonte de Members.tsx (recherche debounce, optimistic updates)
 - [x] Refonte de Finance.tsx (connecter au backend, graphiques)
+- [x] Amélioration de Finance.tsx avec connexion complète aux routers tRPC
+- [x] Amélioration de Events.tsx avec meilleure UX
+- [x] Amélioration de Campaigns.tsx avec meilleure UX
 
 ## Phase 6 - Pages Secondaires (EN ATTENTE - Non prioritaire pour MVP)
 - [ ] Refonte Events.tsx

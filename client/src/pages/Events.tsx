@@ -157,10 +157,11 @@ export default function Events() {
             Gérez les événements passés, présents et futurs de l'association
           </p>
         </div>
-        <Button className="gap-2" onClick={() => toast.info("Création d'événement - Fonctionnalité en développement")}>
+        <Button className="gap-2" disabled>
           <Plus className="h-4 w-4" />
           Nouvel événement
         </Button>
+        <p className="text-xs text-muted-foreground">Fonctionnalité en développement</p>
       </div>
 
       {/* Filters */}
