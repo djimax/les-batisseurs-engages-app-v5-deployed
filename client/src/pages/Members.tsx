@@ -89,6 +89,7 @@ export default function Members() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    gender: "1" as "1" | "2" | "3",
     email: "",
     phone: "",
     role: "Membre",
@@ -139,6 +140,7 @@ export default function Members() {
     setFormData({
       firstName: "",
       lastName: "",
+      gender: "1",
       email: "",
       phone: "",
       role: "Membre",
@@ -153,7 +155,16 @@ export default function Members() {
       toast.error("Le prénom et le nom sont obligatoires");
       return;
     }
-    createMember.mutate(formData);
+    createMember.mutate({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      gender: formData.gender,
+      email: formData.email,
+      phone: formData.phone,
+      role: formData.role,
+      function: formData.function,
+      status: formData.status,
+    });
   };
 
   const handleEdit = () => {
@@ -169,6 +180,7 @@ export default function Members() {
     setFormData({
       firstName: member.firstName,
       lastName: member.lastName,
+      gender: member.gender || "1",
       email: member.email || "",
       phone: member.phone || "",
       role: member.role || "Membre",
@@ -355,6 +367,7 @@ export default function Members() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>ID Membre</TableHead>
                     <TableHead>Membre</TableHead>
                     <TableHead>Rôle</TableHead>
                     <TableHead>Contact</TableHead>
@@ -365,6 +378,11 @@ export default function Members() {
                 <TableBody>
                   {filteredMembers.map((member) => (
                     <TableRow key={member.id}>
+                      <TableCell>
+                        <div className="font-mono text-sm font-bold text-primary">
+                          {member.memberID || "N/A"}
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="h-9 w-9">
@@ -596,6 +614,19 @@ export default function Members() {
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 />
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="editGender">Genre *</Label>
+              <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value as "1" | "2" | "3" })}>
+                <SelectTrigger id="editGender">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Homme</SelectItem>
+                  <SelectItem value="2">Femme</SelectItem>
+                  <SelectItem value="3">Autre (Entreprise, etc.)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="editEmail">Email</Label>

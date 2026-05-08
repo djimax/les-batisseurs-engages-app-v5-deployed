@@ -261,3 +261,14 @@
 - [x] Bouton "Nouvelle Facture" → Modale de facture (Invoices.tsx)
 - [x] Bouton "Nouvel événement" → Toast (Events.tsx)
 - [x] Bouton "Ajouter une Activité" → Dialog (CRMActivities.tsx)
+
+
+## Phase 19 - Système de Numérotation des Membres (PRIORITAIRE)
+- [x] Ajouter le champ memberID au schéma des membres
+- [x] Créer la fonction de génération automatique d'ID (Genre+Mois+Année+NumOrdre)
+- [x] Mettre à jour le router members pour générer l'ID automatiquement
+- [x] Afficher l'ID dans la liste des membres
+- [x] Mettre à jour le formulaire d'ajout de membres
+- [x] Ajouter le champ gender au formulaire
+- [ ] Tester la génération d'ID avec plusieurs membres
+- [ ] Ajouter des tests vitest pour la génération d'ID

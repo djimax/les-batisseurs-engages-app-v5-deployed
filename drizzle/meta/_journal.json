@@ -43,6 +43,13 @@
       "when": 1777463049123,
       "tag": "0005_curvy_vision",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1778217602099,
+      "tag": "0006_stormy_captain_midlands",
+      "breakpoints": true
     }
   ]
 }

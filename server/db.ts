@@ -350,11 +350,50 @@ export async function getMemberById(id: number) {
   return result[0];
 }
 
+/**
+ * Generate member ID based on: Gender + Month + Year + Sequence
+ * Format: G MM YY SSSS
+ * Example: 1 02 25 0003 (Male, February, 2025, 3rd member)
+ */
+export async function generateMemberId(gender: string, joinedAt?: Date): Promise<string> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const date = joinedAt || new Date();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear()).slice(-2);
+  const prefix = `${gender}${month}${year}`;
+  
+  const existingMembers = await db.select().from(members).where(
+    sql`memberID LIKE ${prefix}%`
+  );
+  
+  let maxSequence = 0;
+  for (const member of existingMembers) {
+    if (member.memberID) {
+      const sequence = parseInt(member.memberID.slice(-4), 10);
+      if (!isNaN(sequence) && sequence > maxSequence) {
+        maxSequence = sequence;
+      }
+    }
+  }
+  
+  const nextSequence = String(maxSequence + 1).padStart(4, '0');
+  return `${gender}${month}${year}${nextSequence}`;
+}
+
 export async function createMember(data: InsertMember) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(members).values(data);
-  return { id: result[0].insertId, ...data };
+  
+  // Generate memberID if not provided
+  let memberData = { ...data };
+  if (!memberData.memberID && memberData.gender) {
+    memberData.memberID = await generateMemberId(memberData.gender, memberData.joinedAt);
+  }
+  
+  const result = await db.insert(members).values(memberData);
+  return { id: result[0].insertId, ...memberData };
 }
 
 export async function updateMember(id: number, data: Partial<InsertMember>) {

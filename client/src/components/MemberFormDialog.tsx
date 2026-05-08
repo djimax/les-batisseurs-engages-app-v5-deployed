@@ -18,6 +18,7 @@ export function MemberFormDialog({ onSuccess }: MemberFormDialogProps) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    gender: "1",
     email: "",
     phone: "",
     status: "active",
@@ -32,6 +33,7 @@ export function MemberFormDialog({ onSuccess }: MemberFormDialogProps) {
       setFormData({
         firstName: "",
         lastName: "",
+        gender: "1",
         email: "",
         phone: "",
         status: "active",
@@ -58,10 +60,12 @@ export function MemberFormDialog({ onSuccess }: MemberFormDialogProps) {
     await createMutation.mutateAsync({
       firstName: formData.firstName,
       lastName: formData.lastName,
+      gender: formData.gender as "1" | "2" | "3",
       email: formData.email,
       phone: formData.phone,
       status: formData.status as "active" | "inactive" | "pending",
       role: formData.role,
+      joinedAt: new Date(formData.joinDate),
     });
   };
 
@@ -106,6 +110,20 @@ export function MemberFormDialog({ onSuccess }: MemberFormDialogProps) {
             </div>
 
             <div>
+              <Label htmlFor="gender">Genre *</Label>
+              <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })}>
+                <SelectTrigger id="gender">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Homme</SelectItem>
+                  <SelectItem value="2">Femme</SelectItem>
+                  <SelectItem value="3">Autre (Entreprise, etc.)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -123,6 +141,17 @@ export function MemberFormDialog({ onSuccess }: MemberFormDialogProps) {
                 placeholder="+33 6 12 34 56 78"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="joinDate">Date d'inscription *</Label>
+              <Input
+                id="joinDate"
+                type="date"
+                value={formData.joinDate}
+                onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })}
+                required
               />
             </div>
 

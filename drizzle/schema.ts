@@ -86,6 +86,8 @@ export type InsertDocumentNote = typeof documentNotes.$inferInsert;
 export const members = mysqlTable("members", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId"),
+  memberID: varchar("memberID", { length: 20 }).unique(), // Format: GenderMonthYearSequence (e.g., 102250003)
+  gender: mysqlEnum("gender", ["1", "2", "3"]), // 1=Homme, 2=Femme, 3=Autre
   firstName: varchar("firstName", { length: 100 }).notNull(),
   lastName: varchar("lastName", { length: 100 }).notNull(),
   email: varchar("email", { length: 320 }),

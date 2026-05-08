@@ -400,24 +400,29 @@ export const appRouter = router({
       .input(z.object({
         firstName: z.string().min(1),
         lastName: z.string().min(1),
+        gender: z.enum(["1", "2", "3"]),
         email: z.string().email().optional(),
         phone: z.string().optional(),
         role: z.string().optional(),
         function: z.string().optional(),
         status: z.enum(["active", "inactive", "pending"]).optional(),
+        joinedAt: z.date().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
-        const result = await createMember(input);
+        const result = await createMember({
+          ...input,
+          joinedAt: input.joinedAt || new Date(),
+        });
         await logActivity({
           userId: ctx.user.id,
           action: "create",
           entityType: "member",
           entityId: result.id as number,
-          details: `Membre "${input.firstName} ${input.lastName}" ajouté`,
+          details: `Membre "${input.firstName} ${input.lastName}" ajouté avec ID: ${result.memberID}`,
         });
         await notifyOwner({
           title: "Nouveau membre ajouté",
-          content: `${input.firstName} ${input.lastName} a été ajouté comme membre.`,
+          content: `${input.firstName} ${input.lastName} a été ajouté comme membre avec l'ID: ${result.memberID}.`,
         });
         return result;
       }),
