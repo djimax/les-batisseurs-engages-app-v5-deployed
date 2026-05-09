@@ -56,7 +56,8 @@ import {
   FileSpreadsheet,
   FileImage,
   Loader2,
-  Archive
+  Archive,
+  AlertCircle
 } from "lucide-react";
 
 const SORT_OPTIONS = [
@@ -472,6 +473,18 @@ export default function Documents() {
             </Card>
           ))}
         </div>
+      ) : !documents ? (
+        <Card className="border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-900/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3 text-red-800 dark:text-red-300">
+              <AlertCircle className="h-5 w-5" />
+              <div>
+                <p className="font-medium">Erreur lors du chargement des documents</p>
+                <p className="text-sm text-red-700 dark:text-red-400">Veuillez rafraîchir la page ou contacter l'administrateur</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       ) : filteredDocuments.length > 0 ? (
         <>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

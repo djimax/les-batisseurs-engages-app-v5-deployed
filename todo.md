@@ -216,9 +216,9 @@
 
 
 ## Phase 5 - Améliorations Complémentaires
-- [ ] Vérifier et compléter Documents.tsx pour que les filtres, la pagination et les états loading/error/empty soient effectivement rendus
-- [ ] Ajouter dans Members.tsx une vraie recherche avec debounce et des mutations avec optimistic updates
-- [ ] Connecter réellement Finance.tsx au backend via tRPC et valider les graphiques sur données réelles
+- [x] Vérifier et compléter Documents.tsx pour que les filtres, la pagination et les états loading/error/empty soient effectivement rendus
+- [x] Ajouter dans Members.tsx une vraie recherche avec debounce et des mutations avec optimistic updates
+- [x] Connecter réellement Finance.tsx au backend via tRPC et valider les graphiques sur données réelles
 
 
 ## Corrections de Bugs - Boutons et Erreurs
@@ -270,5 +270,5 @@
 - [x] Afficher l'ID dans la liste des membres
 - [x] Mettre à jour le formulaire d'ajout de membres
 - [x] Ajouter le champ gender au formulaire
-- [ ] Tester la génération d'ID avec plusieurs membres
-- [ ] Ajouter des tests vitest pour la génération d'ID
+- [x] Tester la génération d'ID avec plusieurs membres
+- [x] Ajouter des tests vitest pour la génération d'ID
