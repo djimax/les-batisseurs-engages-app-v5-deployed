@@ -183,7 +183,7 @@
 - [x] Créer le composant SearchBar avec autocomplétion
 - [x] Ajouter la barre de recherche au header
 - [x] Implémenter le debounce pour optimiser les requêtes
-- [ ] Créer la page de résultats de recherche
+- [x] Créer la page de résultats de recherche
 - [x] Ajouter les raccourcis clavier (Cmd+K / Ctrl+K)
 - [x] Tester la recherche avec différents termes
 

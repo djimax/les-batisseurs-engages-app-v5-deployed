@@ -45,6 +45,7 @@ const UserManagement = lazy(() => import("@/pages/UserManagement"));
 const Reports = lazy(() => import("@/pages/Reports"));
 const AdvancedReports = lazy(() => import("@/pages/AdvancedReports"));
 const CustomizableDashboard = lazy(() => import("@/pages/CustomizableDashboard"));
+const SearchResults = lazy(() => import("@/pages/SearchResults"));
 const Login = lazy(() => import("@/pages/Login"));
 const Register = lazy(() => import("@/pages/Register"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -73,6 +74,7 @@ function Router() {
             <Suspense fallback={<PageLoader />}>
               <Switch>
                 <Route path="/" component={Home} />
+                <Route path="/search" component={SearchResults} />
                 <Route path="/documents" component={Documents} />
                 <Route path="/members" component={Members} />
                 <Route path="/users" component={Users} />
