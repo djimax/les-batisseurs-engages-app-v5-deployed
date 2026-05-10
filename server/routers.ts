@@ -21,6 +21,9 @@ import { localAuthRouter } from "./routers/local-auth";
 import { reportsRouter } from "./routers/reports";
 import { widgetsRouter } from "./routers/widgets";
 import { searchRouter } from "./routers/search";
+import { eventsRouter } from "./routers/events";
+import { campaignsRouter } from "./routers/campaigns";
+import { adhesionsRouter } from "./routers/adhesions";
 
 import { z } from "zod";
 import { 
@@ -66,6 +69,9 @@ export const appRouter = router({
   reports: reportsRouter,
   widgets: widgetsRouter,
   search: searchRouter,
+  events: eventsRouter,
+  campaigns: campaignsRouter,
+  adhesions: adhesionsRouter,
 
   // ============ CATEGORIES ============
   categories: router({
