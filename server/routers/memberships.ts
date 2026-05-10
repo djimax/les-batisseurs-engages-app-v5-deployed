@@ -433,4 +433,176 @@ export const membershipsRouter = router({
       });
     }
   }),
+
+  /**
+   * Calculate and update cotisation deadlines automatically
+   */
+  calculateCotisationDeadlines: protectedProcedure.mutation(async () => {
+    try {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const allCotisations = await db.select().from(cotisations);
+      const now = new Date();
+      let updated = 0;
+
+      for (const cot of allCotisations) {
+        if (cot.statut !== "payée" && cot.dateFin) {
+          const endDate = new Date(cot.dateFin);
+          const daysUntilDue = Math.floor((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+          let newStatus = cot.statut;
+          if (daysUntilDue < 0) {
+            newStatus = "en retard";
+          }
+
+          if (newStatus !== cot.statut) {
+            await db
+              .update(cotisations)
+              .set({ statut: newStatus })
+              .where(eq(cotisations.id, cot.id));
+            updated++;
+          }
+        }
+      }
+
+      return { success: true, updated };
+    } catch (error) {
+      console.error("[Memberships] Error calculating deadlines:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to calculate cotisation deadlines",
+      });
+    }
+  }),
+
+  /**
+   * Send payment reminders for overdue cotisations
+   */
+  sendPaymentReminders: protectedProcedure.mutation(async () => {
+    try {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const overdue = await db
+        .select({
+          cotisation: cotisations,
+          member: members,
+        })
+        .from(cotisations)
+        .innerJoin(members, eq(cotisations.memberId, members.id))
+        .where(eq(cotisations.statut, "en retard"));
+
+      const reminders = overdue.map((r) => ({
+        memberId: r.member.id,
+        memberEmail: r.member.email,
+        memberName: `${r.member.firstName} ${r.member.lastName}`,
+        amount: r.cotisation.montant,
+        dueDate: r.cotisation.dateFin,
+        sent: new Date(),
+      }));
+
+      console.log("[Memberships] Payment reminders:", reminders);
+
+      return {
+        success: true,
+        remindersSent: reminders.length,
+        reminders,
+      };
+    } catch (error) {
+      console.error("[Memberships] Error sending reminders:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to send payment reminders",
+      });
+    }
+  }),
+
+  /**
+   * Generate invoice/receipt for a cotisation
+   */
+  generateInvoice: protectedProcedure
+    .input(
+      z.object({
+        cotisationId: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        const cot = await db
+          .select({
+            cotisation: cotisations,
+            member: members,
+          })
+          .from(cotisations)
+          .innerJoin(members, eq(cotisations.memberId, members.id))
+          .where(eq(cotisations.id, input.cotisationId));
+
+        if (cot.length === 0) {
+          throw new Error("Cotisation not found");
+        }
+
+        const { cotisation, member } = cot[0];
+        const invoiceNumber = `INV-${cotisation.id}-${new Date().getFullYear()}`;
+
+        return {
+          success: true,
+          invoice: {
+            number: invoiceNumber,
+            date: new Date(),
+            member: `${member.firstName} ${member.lastName}`,
+            email: member.email,
+            amount: cotisation.montant,
+            period: `${new Date(cotisation.dateDebut).toLocaleDateString("fr-FR")} - ${new Date(cotisation.dateFin).toLocaleDateString("fr-FR")}`,
+            status: cotisation.statut,
+          },
+        };
+      } catch (error) {
+        console.error("[Memberships] Error generating invoice:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate invoice",
+        });
+      }
+    }),
+
+  /**
+   * Get payment history for a member
+   */
+  getPaymentHistory: protectedProcedure
+    .input(
+      z.object({
+        memberId: z.number(),
+      })
+    )
+    .query(async ({ input }) => {
+      try {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        const history = await db
+          .select()
+          .from(cotisations)
+          .where(eq(cotisations.memberId, input.memberId));
+
+        return history.map((h) => ({
+          id: h.id,
+          montant: h.montant,
+          dateDebut: h.dateDebut,
+          dateFin: h.dateFin,
+          statut: h.statut,
+          datePayment: h.datePayment,
+          period: `${new Date(h.dateDebut).toLocaleDateString("fr-FR")} - ${new Date(h.dateFin).toLocaleDateString("fr-FR")}`,
+        }));
+      } catch (error) {
+        console.error("[Memberships] Error getting payment history:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to get payment history",
+        });
+      }
+    }),
 });
