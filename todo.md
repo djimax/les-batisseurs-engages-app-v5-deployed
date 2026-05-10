@@ -186,6 +186,7 @@
 - [x] Créer la page de résultats de recherche
 - [x] Ajouter les raccourcis clavier (Cmd+K / Ctrl+K)
 - [x] Tester la recherche avec différents termes
+- [x] Corriger l'erreur React dans Members.tsx
 
 ## Phase 18 - Aperçu Riche dans la Recherche (NOUVELLE)
 - [x] Enrichir le router tRPC search.global avec métadonnées complètes des documents
@@ -272,3 +273,4 @@
 - [x] Ajouter le champ gender au formulaire
 - [x] Tester la génération d'ID avec plusieurs membres
 - [x] Ajouter des tests vitest pour la génération d'ID
+- [x] Corriger l'erreur React dans Members.tsx
