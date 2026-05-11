@@ -37,8 +37,8 @@
 - [x] Amélioration de Campaigns.tsx avec meilleure UX
 
 ## Phase 6 - Pages Secondaires (EN ATTENTE - Non prioritaire pour MVP)
-- [ ] Refonte Events.tsx
-- [ ] Refonte Campaigns.tsx
+- [x] Refonte Events.tsx
+- [x] Refonte Campaigns.tsx
 - [ ] Refonte Adhesions.tsx
 - [ ] Refonte Archives.tsx
 - [ ] Refonte CRM pages (Dashboard, Contacts, Activities, Reports)

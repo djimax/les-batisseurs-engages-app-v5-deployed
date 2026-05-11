@@ -1,343 +1,228 @@
-import { useState } from "react";
+'use client';
+
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Target, TrendingUp, Calendar, Edit2, Trash2 } from "lucide-react";
+import { Plus, Edit2, Trash2, AlertCircle } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { useFormatAmount } from "@/hooks/useFormatAmount";
-import { AmountDisplay } from "@/components/AmountDisplay";
+
+const STATUS_COLORS = {
+  draft: "bg-gray-100 text-gray-800",
+  scheduled: "bg-blue-100 text-blue-800",
+  active: "bg-green-100 text-green-800",
+  completed: "bg-purple-100 text-purple-800",
+};
 
 export default function Campaigns() {
-  const { formatAmountWithConversion } = useFormatAmount();
-  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | undefined>();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    objectif: "",
-    dateDebut: "",
-    dateFin: "",
-    status: "draft" as const,
+
+  const { data: campaigns = [], isLoading, error } = trpc.campaigns.list.useQuery({
+    limit: 100,
+    offset: 0,
+    search: searchTerm || undefined,
+    status: statusFilter,
   });
 
-  // Placeholder: In real implementation, these would be tRPC queries
-  const campaigns = [
-    {
-      id: 1,
-      title: "Campagne de Financement 2025",
-      description: "Collecte de fonds pour les projets de l'année 2025",
-      objectif: "5000",
-      montantCollecte: "3200",
-      dateDebut: new Date("2025-01-01"),
-      dateFin: new Date("2025-03-31"),
-      status: "active",
-      progress: 64,
+  const { data: stats } = trpc.campaigns.getStats.useQuery();
+
+  const utils = trpc.useUtils();
+  const deleteMutation = trpc.campaigns.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Campagne supprimée");
+      utils.campaigns.list.invalidate();
+      utils.campaigns.getStats.invalidate();
     },
-    {
-      id: 2,
-      title: "Adhésions Annuelles",
-      description: "Collecte des adhésions pour l'année 2025",
-      objectif: "2000",
-      montantCollecte: "1800",
-      dateDebut: new Date("2025-01-15"),
-      dateFin: new Date("2025-12-31"),
-      status: "active",
-      progress: 90,
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la suppression");
     },
-  ];
+  });
 
-  const handleSubmit = () => {
-    if (!formData.title || !formData.objectif) {
-      toast.error("Veuillez remplir tous les champs obligatoires");
-      return;
-    }
-    toast.info("Fonctionnalité en développement");
-    setIsOpen(false);
-  };
+  const filteredCampaigns = useMemo(() => {
+    return campaigns.filter((campaign) => {
+      const searchMatch =
+        campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        campaign.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      return searchMatch;
+    });
+  }, [campaigns, searchTerm]);
 
-  const handleDelete = (id: number) => {
-    toast.info("Fonctionnalité en développement");
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800";
-      case "draft":
-        return "bg-gray-100 text-gray-800";
-      case "completed":
-        return "bg-blue-100 text-blue-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "active":
-        return "Active";
-      case "draft":
-        return "Brouillon";
-      case "completed":
-        return "Complétée";
-      case "cancelled":
-        return "Annulée";
-      default:
-        return status;
-    }
-  };
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="flex items-center gap-3 text-red-600">
+          <AlertCircle className="h-5 w-5" />
+          <span>Erreur lors du chargement des campagnes</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Campagnes de Collecte</h1>
-          <p className="text-muted-foreground mt-2">
-            Gérez vos campagnes de financement et collecte de fonds
-          </p>
-        </div>
-        <Button onClick={() => setIsOpen(true)} className="gap-2">
+        <h1 className="text-3xl font-bold">Campagnes</h1>
+        <Button className="gap-2" onClick={() => setIsCreateOpen(true)}>
           <Plus className="h-4 w-4" />
-          Nouvelle Campagne
+          Nouvelle campagne
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Campagnes Actives</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground mt-1">En cours de collecte</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Collecté</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold"><AmountDisplay amount={5000} sourceCurrency="EUR" /></div>
-            <p className="text-xs text-muted-foreground mt-1">Toutes campagnes confondues</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Objectif Total</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold"><AmountDisplay amount={7000} sourceCurrency="EUR" /></div>
-            <p className="text-xs text-muted-foreground mt-1">71% atteint</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Campaigns List */}
-      <div className="space-y-4">
-        {campaigns.map((campaign) => (
-          <Card key={campaign.id} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-semibold">{campaign.title}</h3>
-                    <Badge className={getStatusColor(campaign.status)}>
-                      {getStatusLabel(campaign.status)}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2">{campaign.description}</p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setEditingId(campaign.id);
-                      setIsOpen(true);
-                    }}
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(campaign.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+      {stats && (
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Total</CardTitle>
             </CardHeader>
-
-            <CardContent className="space-y-4">
-              {/* Progress Bar */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">Progression</span>
-                  <span className="text-sm font-semibold">{campaign.progress}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-green-500 h-2 rounded-full transition-all"
-                    style={{ width: `${campaign.progress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Campaign Details */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <p className="text-xs text-muted-foreground">Collecté</p>
-                  <p className="text-lg font-bold text-green-600"><AmountDisplay amount={parseFloat(campaign.montantCollecte || "0")} sourceCurrency="EUR" /></p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Objectif</p>
-                  <p className="text-lg font-bold"><AmountDisplay amount={parseFloat(campaign.objectif || "0")} sourceCurrency="EUR" /></p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Début</p>
-                    <p className="text-sm font-medium">{campaign.dateDebut.toLocaleDateString('fr-FR')}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Fin</p>
-                    <p className="text-sm font-medium">{campaign.dateFin.toLocaleDateString('fr-FR')}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <Button variant="outline" className="w-full gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Voir les détails
-              </Button>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.total}</div>
             </CardContent>
           </Card>
-        ))}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Brouillons</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Actives</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Complétées</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-600">{stats.completed}</div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        <div className="flex gap-2">
+          <Input
+            placeholder="Rechercher une campagne..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1"
+          />
+        </div>
+
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            variant={statusFilter === undefined ? "default" : "outline"}
+            onClick={() => setStatusFilter(undefined)}
+          >
+            Toutes
+          </Button>
+          {(["draft", "scheduled", "active", "completed"] as const).map((status) => (
+            <Button
+              key={status}
+              variant={statusFilter === status ? "default" : "outline"}
+              onClick={() => setStatusFilter(status)}
+              className="capitalize"
+            >
+              {status === "draft" ? "Brouillons" : status === "scheduled" ? "Programmées" : status === "active" ? "Actives" : "Complétées"}
+            </Button>
+          ))}
+        </div>
       </div>
 
-      {/* Dialog for Creating/Editing Campaign */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>
-              {editingId ? "Modifier la campagne" : "Nouvelle campagne"}
-            </DialogTitle>
-            <DialogDescription>
-              {editingId
-                ? "Mettez à jour les informations de la campagne"
-                : "Créez une nouvelle campagne de collecte"}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Titre *</label>
-              <Input
-                placeholder="Nom de la campagne"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Description</label>
-              <Textarea
-                placeholder="Description de la campagne"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                rows={3}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Objectif (F) *</label>
-                <Input
-                  type="number"
-                  placeholder="5000"
-                  value={formData.objectif}
-                  onChange={(e) =>
-                    setFormData({ ...formData, objectif: e.target.value })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Statut</label>
-                <Select value={formData.status} onValueChange={(value: any) =>
-                  setFormData({ ...formData, status: value })
-                }>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Brouillon</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="completed">Complétée</SelectItem>
-                    <SelectItem value="cancelled">Annulée</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Date de début</label>
-                <Input
-                  type="date"
-                  value={formData.dateDebut}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dateDebut: e.target.value })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Date de fin</label>
-                <Input
-                  type="date"
-                  value={formData.dateFin}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dateFin: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3 pt-4">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setIsOpen(false)}
-              >
-                Annuler
-              </Button>
-              <Button className="flex-1" onClick={handleSubmit}>
-                {editingId ? "Mettre à jour" : "Créer"}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {isLoading ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="animate-pulse">
+              <CardContent className="pt-6">
+                <div className="h-6 w-1/3 rounded bg-gray-200" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : filteredCampaigns.length === 0 ? (
+        <Card>
+          <CardContent className="pt-6 text-center text-gray-500">
+            Aucune campagne trouvée
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-4">
+          {filteredCampaigns.map((campaign) => (
+            <Card key={campaign.id} className="hover:shadow-md transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-lg">{campaign.title}</CardTitle>
+                      <span className={`px-2 py-1 rounded text-xs font-medium capitalize ${STATUS_COLORS[campaign.status as keyof typeof STATUS_COLORS]}`}>
+                        {campaign.status === "draft" ? "Brouillon" : campaign.status === "scheduled" ? "Programmée" : campaign.status === "active" ? "Active" : "Complétée"}
+                      </span>
+                    </div>
+                    {campaign.description && (
+                      <CardDescription className="mt-1">{campaign.description}</CardDescription>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditingId(campaign.id);
+                        setIsCreateOpen(true);
+                      }}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteMutation.mutate({ id: campaign.id })}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                  {campaign.targetAudience && (
+                    <div>
+                      <div className="text-gray-600">Audience</div>
+                      <div className="font-medium">{campaign.targetAudience}</div>
+                    </div>
+                  )}
+                  {campaign.budget && (
+                    <div>
+                      <div className="text-gray-600">Budget</div>
+                      <div className="font-medium">{campaign.budget} EUR</div>
+                    </div>
+                  )}
+                  {campaign.goal && (
+                    <div>
+                      <div className="text-gray-600">Objectif</div>
+                      <div className="font-medium">{campaign.goal}</div>
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-gray-600">Type</div>
+                    <div className="font-medium capitalize">{campaign.campaignType}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
